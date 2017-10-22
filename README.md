@@ -7,8 +7,8 @@ Functionality list is below:
 1. Gathering source IP and packets count, saving it in key-value data structure based on implemented reb-black tree
    <br/>Packet capturing performed with help of pcap library
 
-2. Saving data data structure to file
-   <br/>Data serialized/deserialized with help of protobuf protocol, particularly protobuf-c
+2. Saving data structure to file
+   <br/>Data structure serialized/deserialized with help of protobuf protocol, particularly protobuf-c
 
 3. Packets capturing from proper source IP
 
