@@ -1,6 +1,6 @@
 # sniffer-demo
 
-This is a linux demo application which allows capturing tcp packets and reveals short statistics with data persistency support. 
+This is a demo linux application which allows capturing tcp packets and reveals short statistics with data persistency support. 
 
 Functionality list is below:
 
