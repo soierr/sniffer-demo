@@ -1,7 +1,7 @@
 
 .settings
-Debug
-Release
+#Debug
+#Release
 
 .cproject
 .project
