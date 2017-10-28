@@ -29,7 +29,7 @@ In order to be able to build the application and launch it the following librari
 - for protobuf, protobuf-c see proper readme on github
 - sudo apt-get install libncurses-dev
 
-After installation, make the following stepss:
+After installation, make the following steps:
 
 - git clone https://github.com/soierr/sniffer-demo.git
 - cd sniffer-demo
@@ -38,4 +38,6 @@ After installation, make the following stepss:
 Once it's done, look for a file sniffer-demo.exe which is our target application
 
 sudo ./sniffer-demo.exe
+
+If there are any problem with library resolving try start "ldconfig"
 
