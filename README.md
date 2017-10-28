@@ -16,4 +16,19 @@ Functionality list is below:
 
 sudo rights needed to launch the application
 
+In order to be able to build the application and launch it the following libraries needs to intalled:
+
+
+pcap                  (tested on v 0.8)
+protobuf, protobuf-c  (tested on v 3.4.0)
+ncurses               (tested on v 5.0)
+git
+
+After installation, make the following stepss:
+
+git clone https://github.com/soierr/sniffer-demo.git
+cd sniffer-demo
+make
+
+
 
