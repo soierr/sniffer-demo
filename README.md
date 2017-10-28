@@ -30,7 +30,7 @@ Commands to install mentioned libs:
 - for protobuf, protobuf-c see proper readme on github
 - sudo apt-get install libncurses-dev
 
-After installation, make the following steps:
+After installation make the following steps:
 
 - git clone https://github.com/soierr/sniffer-demo.git
 - cd sniffer-demo
