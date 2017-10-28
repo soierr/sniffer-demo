@@ -26,9 +26,11 @@ In order to be able to build the application and launch it the following librari
 
 After installation, make the following stepss:
 
-git clone https://github.com/soierr/sniffer-demo.git
-cd sniffer-demo
-make
+- git clone https://github.com/soierr/sniffer-demo.git
+- cd sniffer-demo
+- make
+
+Once it's done, look for a file sniffer-demo.exe which is our target application
 
 
 
