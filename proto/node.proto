@@ -1,0 +1,14 @@
+syntax="proto3";
+
+message Node {
+
+  int32 ip=1;
+  int32 count=2;
+
+}
+
+message TreeArrayed{
+
+	int32 length=1;
+	repeated Node nodes=2;
+}
