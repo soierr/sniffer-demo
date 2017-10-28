@@ -1,11 +1,10 @@
 
 .settings
+.settings/
 Debug/
-Release
 
 .cproject
 .project
 
 stats.bin
-
 sniffer-demo.exe
