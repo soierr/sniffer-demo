@@ -37,5 +37,5 @@ After installation, make the following stepss:
 
 Once it's done, look for a file sniffer-demo.exe which is our target application
 
-
+sudo ./sniffer-demo.exe
 
