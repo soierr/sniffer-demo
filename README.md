@@ -42,3 +42,5 @@ sudo ./sniffer-demo.exe
 
 If there are any problem with library resolving try start "ldconfig"
 
+(Tested on: Ubuntu 16.04 LTS (64-bit), Lubuntu 16.04 LTS (32-bit))
+
