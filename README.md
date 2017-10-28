@@ -16,7 +16,7 @@ Functionality list is below:
 
 sudo rights needed to launch the application
 
-In order to be able to build the application and launch it the following libraries needs to intalled:
+In order to be able to build the application and launch it the following libraries needs to installed:
 
 
 - pcap                  (tested on v0.8)
