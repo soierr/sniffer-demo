@@ -6,29 +6,31 @@
  */
 #include "pcap_api.h"
 
+int is_stop_capturing = 0;
+
 static pcap_t * handle;
 
 static char * dev;
 
 static char ip_a[IP_LENTH];
 
+static char ip_dst[IP_LENTH];
+
 static char * netmask_string;
 
 static bpf_u_int32 netmask = 0;
 
-static void print_packet(const u_char * packet);
+static char result_buf[PCAP_ERRBUF_SIZE];
 
-enum PCAP_RESULT pcap_init(char ** result_desc){
+static void process_packet(const u_char * packet);
 
-	static struct Device * device;
+static void prepare_capturing(char* ip_src, char* id_dst, char* result_desc);
 
-	static struct Device * device_prev;
+enum RESULT_PCAP pcap_init(char ** result_desc){
 
 	pcap_if_t *alldevs;
 
 	struct pcap_if * e_int;
-
-	char errbuf[PCAP_ERRBUF_SIZE];
 
 	struct pcap_addr * dev_addr;
 
@@ -44,13 +46,7 @@ enum PCAP_RESULT pcap_init(char ** result_desc){
 
 	char netmask_a[IP_LENTH];
 
-	pcap_findalldevs(&alldevs, errbuf);
-
-// ===============
-
-
-
-// ===============
+	pcap_findalldevs(&alldevs, result_buf);
 
 	if(alldevs == NULL){
 
@@ -61,9 +57,6 @@ enum PCAP_RESULT pcap_init(char ** result_desc){
 	e_int = alldevs;
 
 	do{
-
-/*		printf("Name: %s\n", e_int->name);
-		printf("Flag: %d\n", e_int->flags);*/
 
 		if(e_int->flags == (PCAP_IF_UP | PCAP_IF_RUNNING)){
 
@@ -79,19 +72,9 @@ enum PCAP_RESULT pcap_init(char ** result_desc){
 
 					if(dev_sockaddr_in->sin_family == AF_INET){
 
-						device = malloc(sizeof(struct Device));
-
-						device->next = (device_prev == NULL) ? device_prev : NULL;
-
 						ip_string = inet_ntoa(dev_sockaddr_in->sin_addr);
 
-						device->ip = ip_string;
-
-						device->name = e_int->name;
-
-						strcpy(ip_a, ip_string);
-
-						printf("IP %s\n: ", ip_string);
+						strcpy(ip_dst, ip_string);
 
 						dev_sockaddr_netmask = (struct sockaddr *) dev_addr->netmask;
 
@@ -103,106 +86,155 @@ enum PCAP_RESULT pcap_init(char ** result_desc){
 
 						strcpy(netmask_a, netmask_string);
 
-						device_prev = device;
+						dev = e_int->name;
 					}
 
 				}while((dev_addr = dev_addr->next));
-
 			}
 		}
 
 	}while((e_int = e_int->next));
 
-	*result_desc = "Successfully initialized";
+	*result_desc = "   PCAP. Successful initialization";
 
 	return P_OK;
 }
 
-enum PCAP_RESULT pcap_track(char * ip, char ** result_desc){
-
-	int packet_count_limit = 1000000;
-
-	int timeout_limit = 5000;
-
-	char filter_exp[LENGTH_PCAP_FILTER] = "tcp && (dst ";	/* The filter expression */
-	char * filter_exp_part3 = " && (src ";
-	char * filter_exp_part4 = " )";
-
-	struct bpf_program fp;
+void * pcap_start(){
 
 	struct pcap_pkthdr packet_header;
 
-	const u_char * packet;
+	const u_char* packet;
 
-	strcat(filter_exp, ip_a);
+	prepare_capturing(NULL, ip_dst, result_buf);
 
-	strcat(filter_exp, ")");
-
-	strcat(filter_exp, filter_exp_part3);
-
-	strcat(filter_exp, ip);
-
-	strcat(filter_exp, filter_exp_part4);
-
-	handle = pcap_open_live(dev, BUFSIZ, packet_count_limit, timeout_limit, *result_desc);
-
-	if (pcap_compile(handle, &fp, filter_exp, 0, netmask) == -1) {
-			 fprintf(stderr, "Couldn't parse filter %s: %s\n", filter_exp, pcap_geterr(handle));
-			 return(2);
-	}
-
-	if (pcap_setfilter(handle, &fp) == -1) {
-				fprintf(stderr, "Couldn't install filter %s: %s\n", filter_exp, pcap_geterr(handle));
-				return(2);
-	}
-
-	while(1){
+	while(!is_stop_capturing){
 
 		packet = pcap_next(handle, &packet_header);
 
-		print_packet(packet);
+		process_packet(packet);
 	}
 
-	return P_OK;
+	pcap_close(handle);
+
+	is_stop_capturing = 0;
+
+	pthread_exit(NULL);
 }
 
-static void print_packet(const u_char * packet){
+void * pcap_track(void * command_in){
 
-	const struct sniff_ethernet * ethernet;
-	const struct sniff_ip * ip;
-	const struct sniff_tcp * tcp;
-	const u_char * payload;
+	struct Command * command = (struct Command *) command_in;
+
+	struct pcap_pkthdr packet_header;
+
+	const u_char* packet;
+
+	prepare_capturing(command->ip_c_src, ip_dst, result_buf);
+
+	while(!is_stop_capturing){
+
+		packet = pcap_next(handle, &packet_header);
+
+		process_packet(packet);
+	}
+
+	pcap_close(handle);
+
+	is_stop_capturing = 0;
+
+	pthread_exit(NULL);
+}
+
+static void prepare_capturing(char * ip_src, char * ip_dst, char* result_buf){
+
+	int packet_count_limit = 1;
+
+	int timeout_limit = 200;
+
+	struct bpf_program fp;
+
+	char filter_exp[LENGTH_PCAP_FILTER] = "tcp && (dst ";
+
+	if(NULL != ip_src){
+
+		char * filter_exp_part3 = " && src ";
+		char * filter_exp_part4 = ")";
+
+		strcat(filter_exp, ip_dst);
+
+		strcat(filter_exp, filter_exp_part3);
+
+		strcat(filter_exp, ip_src);
+
+		strcat(filter_exp, filter_exp_part4);
+
+	}else{
+
+		char * filter_exp_part2 = ")";
+
+		strcat(filter_exp, ip_dst);
+
+		strcat(filter_exp, filter_exp_part2);
+	}
+
+	handle = pcap_open_live(dev, BUFSIZ, packet_count_limit, timeout_limit, result_buf);
+
+	if (pcap_compile(handle, &fp, filter_exp, 0, netmask) == -1) {
+		 fprintf(stderr, "Couldn't parse filter %s: %s\r\n", filter_exp, pcap_geterr(handle));
+		 return;
+	}
+
+	if (pcap_setfilter(handle, &fp) == -1) {
+		fprintf(stderr, "Couldn't install filter %s: %s\r\n", filter_exp, pcap_geterr(handle));
+		return;
+	}
+
+}
+
+static void process_packet(const u_char * packet){
+
+	const struct ether_header * ethernet;
+
+	const struct ip * ip;
+	const struct tcphdr * tcp;
 
 	u_int size_ip;
 	u_int size_tcp;
+	u_int size_payload;
 
-	ethernet = (struct sniff_ethernet*)(packet);
+	char * ip_string;
+
+	ethernet = (struct ether_header*)(packet);
 
 	if(ethernet->ether_dhost == NULL){
-
 		return;
 	}
 
-	ip = (struct sniff_ip*)(packet + SIZE_ETHERNET);
-	size_ip = IP_HL(ip)*4;
+	ip = (struct ip *)(packet + SIZE_ETHERNET);
+	size_ip = ip->ip_hl;
 
-	if (size_ip < 20) {
-		printf("   * Invalid IP header length: %u bytes\n", size_ip);
+	if (size_ip < 5) {
 		return;
 	}
 
-	tcp = (struct sniff_tcp*)(packet + SIZE_ETHERNET + size_ip);
-	size_tcp = TH_OFF(tcp)*4;
+	ip_string = inet_ntoa(ip->ip_src);
 
-	if (size_tcp < 20) {
-		printf("   * Invalid TCP header length: %u bytes\n", size_tcp);
+	strcpy(ip_a, ip_string);
+
+	tcp = (struct tcphdr *)(packet + SIZE_ETHERNET + (size_ip * 4));
+	size_tcp = tcp->th_off;
+
+	if (size_tcp < 5) {
 		return;
 	}
 
-	payload = (u_char *) (packet + SIZE_ETHERNET + size_ip + size_tcp);
+	size_payload = htons(ip->ip_len) - ((size_ip * 4) + (size_tcp * 4));
 
-	printf("Payload: %s\n", payload);
+	if(size_payload > 0){
 
+		printf("Get packet with data from: %s; length: %d bytes\r\n", ip_a, size_payload);
+		insert_node(ip->ip_src.s_addr);
+	}
 
 }
-

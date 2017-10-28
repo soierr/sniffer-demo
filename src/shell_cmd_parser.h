@@ -11,9 +11,12 @@
 #define RESULT_DESC_OK 					"OK"
 #define RESULT_DESC_MISSING_ARGUMENT 	"Missing argument"
 
-#define COMMAND_HELP 	"help"
-#define COMMAND_TRACK 	"track"
-#define COMMAND_EXIT 	"exit"
+#define COMMAND_HELP 		"help"
+#define COMMAND_START 		"start"
+#define COMMAND_TRACK 		"track"
+#define COMMAND_COUNT 		"count"
+#define COMMAND_STATS 		"stats"
+#define COMMAND_EXIT 		"exit"
 
 #define COMMAND_HELP_TEXT "\nCommand List: \n\n" \
 						  " \thelp  	 	- information about the commands\n" \
@@ -25,9 +28,14 @@
 						  " \ttrack arg1 	- tracks a proper ip as a source of incoming packets." \
 						  " See \"count\" for usage example\n\n" \
 
+
+#define INFO_INTRO "\nThis is SNIFFER-DEMO application for tcp packets capturing\n" \
+				   "For all commands list type \"help\" \n\n"
+
+
 #define DELIMITER " \n"
 
-enum PARSING_RESULT{
+enum RESULT_PARSING{
 
 	PARSING_OK,
 	PARSING_EMPTY,
@@ -37,24 +45,34 @@ enum PARSING_RESULT{
 
 enum COMMAND{
 
+	NOT_SET_CMD,
 	HELP,
 	START,
-	STOP,
 	TRACK,
-	STATUS,
 	COUNT,
 	STATS,
 	EXIT
 
 };
 
-struct Command{
+enum RESULT_COMMAND_LAUNCH{
 
-	enum COMMAND command;
-	char * ip_c;
-	int ip_i;
+	START_OK,
+	START_FAILED
 };
 
-enum PARSING_RESULT parse(struct Command * command, char * line, char ** result_desc);
+struct Command{
+
+	enum RESULT_COMMAND_LAUNCH resul_launch;
+	enum COMMAND command;
+	char * ip_c_dst;
+	int ip_i_dst;
+	char * ip_c_src;
+	int ip_i_src;
+	char * result_desc;
+	unsigned int count;
+};
+
+enum RESULT_PARSING parse(struct Command * command, char * line, char ** result_desc);
 
 #endif /* SHELL_CMD_PARSER_H_ */
