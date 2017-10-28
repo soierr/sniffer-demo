@@ -1,11 +1,11 @@
 
 .settings
-#Debug
-#Release
+Debug
+Release
 
-#.cproject
-#.project
+.cproject
+.project
 
-#stats.bin
+stats.bin
 
-#sniffer-demo.exe
+sniffer-demo.exe
