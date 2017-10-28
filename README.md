@@ -24,7 +24,7 @@ In order to be able to build the application and launch it the following librari
 - ncurses               (tested on v5.0)
 - git
 
-Command to install mentioned libs:
+Commands to install mentioned libs:
 
 - sudo apt-get install libpcap-dev
 - for protobuf, protobuf-c see proper readme on github
