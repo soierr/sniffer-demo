@@ -104,7 +104,7 @@ void * pcap_start(){
 
 	struct pcap_pkthdr packet_header;
 
-	const u_char* packet;
+	const u_char * packet;
 
 	prepare_capturing(NULL, ip_dst, result_buf);
 
@@ -128,7 +128,7 @@ void * pcap_track(void * command_in){
 
 	struct pcap_pkthdr packet_header;
 
-	const u_char* packet;
+	const u_char * packet;
 
 	prepare_capturing(command->ip_c_src, ip_dst, result_buf);
 
@@ -214,7 +214,7 @@ static void process_packet(const u_char * packet){
 	ip = (struct ip *)(packet + SIZE_ETHERNET);
 	size_ip = ip->ip_hl;
 
-	if (size_ip < 5) {
+	if (size_ip < FIVE_WORDS) {
 		return;
 	}
 
@@ -222,14 +222,14 @@ static void process_packet(const u_char * packet){
 
 	strcpy(ip_a, ip_string);
 
-	tcp = (struct tcphdr *)(packet + SIZE_ETHERNET + (size_ip * 4));
+	tcp = (struct tcphdr *)(packet + SIZE_ETHERNET + (size_ip * FOUR_BYTES_ONE_WORD));
 	size_tcp = tcp->th_off;
 
-	if (size_tcp < 5) {
+	if (size_tcp < FIVE_WORDS) {
 		return;
 	}
 
-	size_payload = htons(ip->ip_len) - ((size_ip * 4) + (size_tcp * 4));
+	size_payload = htons(ip->ip_len) - ((size_ip * FOUR_BYTES_ONE_WORD) + (size_tcp * FOUR_BYTES_ONE_WORD));
 
 	if(size_payload > 0){
 

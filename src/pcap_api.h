@@ -31,6 +31,9 @@
 #define SIZE_ETHERNET 		14
 #define SIZE_BEFORE_IP_SRC	12
 
+#define FIVE_WORDS 5
+#define FOUR_BYTES_ONE_WORD 4
+
 enum RESULT_PCAP{
 
 	P_OK,

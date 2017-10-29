@@ -63,7 +63,7 @@ enum RESULT_COMMAND_LAUNCH{
 
 struct Command{
 
-	enum RESULT_COMMAND_LAUNCH resul_launch;
+	enum RESULT_COMMAND_LAUNCH result_launch;
 	enum COMMAND command;
 	char * ip_c_dst;
 	int ip_i_dst;

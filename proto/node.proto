@@ -9,6 +9,5 @@ message Node {
 
 message TreeArrayed{
 
-	int32 length=1;
-	repeated Node nodes=2;
+	repeated Node nodes=1;
 }

@@ -13,6 +13,8 @@
 
 #include <tree_init.h>
 
+#define DEFAULT_TREE_ROOT_INT 16777343
+
 void create_root(unsigned int ip);
 
 struct TreeNode * get_root();

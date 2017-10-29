@@ -209,6 +209,8 @@ struct TreeStats * get_stats(){
 
 	struct TreeNode * root = get_root();
 
+	ts.max_count_ip = root->ip;
+	ts.max_count = root->count;
 	ts.min_count_ip = root->ip;
 	ts.min_count = root->count;
 
@@ -230,10 +232,10 @@ static void inorder_traversal(struct TreeNode * node, struct TreeStats * ts){
 	if(ts->max_count < node->count){
 		ts->max_count = node->count;
 		ts->max_count_ip = node->ip;
-	}else if(ts->min_count > node->count){
+	}
+
+	if((ts->min_count > node->count && node->ip != DEFAULT_TREE_ROOT_INT) || ts->min_count_ip == DEFAULT_TREE_ROOT_INT){
 		ts->min_count = node->count;
-		ts->min_count_ip = node->ip;
-	}else if(ts->min_count == node->count){
 		ts->min_count_ip = node->ip;
 	}
 

@@ -21,9 +21,8 @@
 #include "tree_init.h"
 #include "tree_save.h"
 
-#define NUM_THREADS 2
-
 #define DEFAULT_TREE_ROOT "127.0.0.1"
+#define DEFAULT_TREE_ROOT_INT 16777343
 
 int main(void) {
 
@@ -38,7 +37,6 @@ int main(void) {
 
 	enum RESULT_PCAP res_pcap;
 	enum RESULT_TREE res_tree;
-
 	enum RESULT_PARSING res_parsing;
 
 	printf(INFO_INTRO);
@@ -82,7 +80,6 @@ int main(void) {
 	}
 
 	printf("Initialization section stop\n\n");
-
 	printf("sniffer-demo>");
 
 	do{

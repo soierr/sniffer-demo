@@ -38,13 +38,12 @@ struct  _Node
 struct  _TreeArrayed
 {
   ProtobufCMessage base;
-  int32_t length;
   size_t n_nodes;
   Node **nodes;
 };
 #define TREE_ARRAYED__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&tree_arrayed__descriptor) \
-    , 0, 0,NULL }
+    , 0,NULL }
 
 
 /* Node methods */

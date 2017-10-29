@@ -148,23 +148,11 @@ const ProtobufCMessageDescriptor node__descriptor =
   (ProtobufCMessageInit) node__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor tree_arrayed__field_descriptors[2] =
+static const ProtobufCFieldDescriptor tree_arrayed__field_descriptors[1] =
 {
   {
-    "length",
-    1,
-    PROTOBUF_C_LABEL_NONE,
-    PROTOBUF_C_TYPE_INT32,
-    0,   /* quantifier_offset */
-    offsetof(TreeArrayed, length),
-    NULL,
-    NULL,
-    0,             /* flags */
-    0,NULL,NULL    /* reserved1,reserved2, etc */
-  },
-  {
     "nodes",
-    2,
+    1,
     PROTOBUF_C_LABEL_REPEATED,
     PROTOBUF_C_TYPE_MESSAGE,
     offsetof(TreeArrayed, n_nodes),
@@ -176,13 +164,12 @@ static const ProtobufCFieldDescriptor tree_arrayed__field_descriptors[2] =
   },
 };
 static const unsigned tree_arrayed__field_indices_by_name[] = {
-  0,   /* field[0] = length */
-  1,   /* field[1] = nodes */
+  0,   /* field[0] = nodes */
 };
 static const ProtobufCIntRange tree_arrayed__number_ranges[1 + 1] =
 {
   { 1, 0 },
-  { 0, 2 }
+  { 0, 1 }
 };
 const ProtobufCMessageDescriptor tree_arrayed__descriptor =
 {
@@ -192,7 +179,7 @@ const ProtobufCMessageDescriptor tree_arrayed__descriptor =
   "TreeArrayed",
   "",
   sizeof(TreeArrayed),
-  2,
+  1,
   tree_arrayed__field_descriptors,
   tree_arrayed__field_indices_by_name,
   1,  tree_arrayed__number_ranges,
