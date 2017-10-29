@@ -20,13 +20,12 @@
 
 #define COMMAND_HELP_TEXT "\nCommand List: \n\n" \
 						  " \thelp  	 	- information about the commands\n" \
-						  " \tstart 	 	- starts sniffing packets\n" \
-						  " \tstop  	 	- stops sniffing packets\n" \
+						  " \tstart 	 	- starts sniffing packets. Press \"q\" for stopping\n" \
 						  " \tcount arg1 	- reveals captured packets for a proper ip placed as an arg1."\
 						  " Example: count 192.168.1.1\n" \
 						  " \tstats 	 	- reveals statistics as to the sniffed packets\n" \
 						  " \ttrack arg1 	- tracks a proper ip as a source of incoming packets." \
-						  " See \"count\" for usage example\n\n" \
+						  " See \"count\" for usage example. Press \"q\" for stopping\n\n" \
 
 
 #define INFO_INTRO "\nThis is SNIFFER-DEMO application for tcp packets capturing\n" \
