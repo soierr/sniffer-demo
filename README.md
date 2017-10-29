@@ -20,7 +20,7 @@ In order to be able to build the application and launch it the following librari
 
 
 - pcap                  (tested on v0.8)
-- protobuf, protobuf-c  (tested on v3.4.0 v1.3.0)
+- protobuf, protobuf-c  (tested on v3.4.0, v1.3.0)
 - ncurses               (tested on v5.0)
 - git
 
